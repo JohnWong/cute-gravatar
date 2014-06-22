@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>头像编辑</title>
+	<!--script_file-->
+	<script src="d3.v3.min.js"></script>
+	<script src="zepto.min.js"></script>
+	<!--绘制bubble-->
+	<script src="dataparse.js"></script>
+	<script src="personchange.js"></script>
+	<!--数据导入-->
+	<script src="bodyData.js"></script>
+	<script src="faceData.js"></script>
+	<script src="mouthData.js"></script>
+	<script src="hairData.js"></script>
+	<script src="eyeData.js"></script>
+	<script src="eyebrowData.js"></script>
+	<script src="noseData.js"></script>
+	<script src="glassData.js"></script>
+	<script src="hatData.js"></script>
+	<script src="bubbleData.js"></script>
+	<script src="clothData.js"></script>
+	<script src="backgroundData.js"></script>
+	<script src="hobbyData.js"></script>
+	<script src="featureData.js"></script>
+	<script src="expressData.js"></script>
+	<script src="bdBubbleData.js"></script>
+	<script src="bubbl2eData.js"></script>
+	<!--css_file-->
+	<link href="reset.css" type="text/css" rel="stylesheet" />
+	<link href="edit.css" type="text/css" rel="stylesheet" />
+	<style>
+		.pathS{
+			fill-rule:evenodd;
+			clip-rule:evenodd;
+		}
+		.bubbl2eTextA,.bubbl2eTextB{
+			font-family: "微软雅黑";
+		}
+	</style>
+</head>
+<body>
+	<div id="contentDIV">
+	</div>
+<script>
+/*标记变量roleA*/
+var sexTag={"id":0};
+var bodyTag={"id":1};
+var faceTag={"id":1,"color":"#F4CDA7","x":0,"y":0};
+var eyebrowTag={"id":29,"x":0,"y":0};
+var glassTag={"id":0,"x":0,"y":0};
+var bdBubbleTag={"id":0,"x":0,"y":0};
+var hatTag={"id":0,"x":0,"y":0};
+var featureTag={"id":0,"x":0,"y":0};
+var backgroundTag={"id":29,"x":0,"y":0};
+var clothTag={"id":1,"x":0,"y":0};
+var eyeTag={"id":5,"x":0,"y":0};
+var hobbyTag={"id":5,"x":0,"y":0};
+var hairTag={"id":48,"color":"#F29600","x":0,"y":0};
+var mouthTag={"id":12,"x":0,"y":0};
+var expressTag={"id":5,"x":0,"y":0};
+var noseTag={"id":0,"x":0,"y":0};
+/*标记变量roleB*/
+var sexTagB={"id":0};
+var bodyTagB={"id":1};
+var faceTagB={"id":1,"color":"#F4CDA7","x":0,"y":0};
+var eyebrowTagB={"id":29,"x":0,"y":0};
+var glassTagB={"id":0,"x":0,"y":0};
+var hatTagB={"id":0,"x":0,"y":0};
+var featureTagB={"id":0,"x":0,"y":0};
+var clothTagB={"id":1,"x":0,"y":0};
+var eyeTagB={"id":5,"x":0,"y":0};
+var hobbyTagB={"id":5,"x":0,"y":0};
+var hairTagB={"id":48,"color":"#F29600","x":0,"y":0};
+var mouthTagB={"id":12,"x":0,"y":0};
+var expressTagB={"id":2,"x":0,"y":0};
+var noseTagB={"id":0,"x":0,"y":0};
+//坐标数据
+var svgWidth=640;
+var svgHeight=640;
+var winWidth=$(window).get(0).innerWidth;
+var winHeight=$(window).get(0).innerHeight;
+var minWidth=winWidth<winHeight?winWidth:winHeight;
+//新建画布
+var svg=d3.select("#contentDIV").append("svg")
+	.attr("xmlns","http://www.w3.org/2000/svg")
+	.attr("version","1.1")
+	.attr("id","contentSVG")
+	.attr("width",svgWidth)
+	.attr("height",svgHeight)
+	.attr("viewBox","0 0 "+svgWidth+" "+svgHeight)
+	.attr("xml:space","preserve");
+var background2=svg.append("g").attr("id","background2");
+var background3=svg.append("g").attr("id","background3");
+var background=svg.append("g").attr("id","background");
+var bdBubble=svg.append("g").attr("id","bdBubble");
+var bubbl2e=svg.append("g").attr("id","bubble2");
+var bubbl2eB=svg.append("g").attr("id","bubble2B");
+
+var roleB=svg.append("g").attr("id","roleB");
+var roleA=svg.append("g").attr("id","roleA");
+/*roleA*/
+var personSVG=roleA.append("g").attr("id","person");
+var backHairSVG=personSVG.append("g").attr("id","backHairSVG");
+var bodySVG=personSVG.append("g").attr("id","body");
+var headSVG=personSVG.append("g").attr("id","head");
+var hobby=roleA.append("g").attr("id","hobby");
+var bubble=roleA.append("g").attr("id","bubble");
+
+var haloA=roleA.append("g").attr("id","haloA");
+/*头部编辑*/
+var backHair=backHairSVG.append("g").attr("id","backHair");
+var middleHair=headSVG.append("g").attr("id","middleHair");
+var face=headSVG.append("g").attr("id","face");
+var facial =headSVG.append("g").attr("id","facial");
+var eyebrow=facial.append("g").attr("id","eyebrow");
+var mouth=facial.append("g").attr("id","mouth");
+var eye=facial.append("g").attr("id","eye");
+var nose=facial.append("g").attr("id","nose");
+var express=headSVG.append("g").attr("id","express");
+var feature=headSVG.append("g").attr("id","feature");
+var frontHair=headSVG.append("g").attr("id","frontHair");
+var express2=headSVG.append("g").attr("id","express2");
+var glass=headSVG.append("g").attr("id","glass");
+var hat=headSVG.append("g").attr("id","hat");
+
+/*身体编辑*/
+var body=bodySVG.append("g").attr("id","body");
+var cloth=bodySVG.append("g").attr("id","cloth");
+/*roleB*/
+var personSVGB=roleB.append("g").attr("id","personB");
+var backHairSVGB=personSVGB.append("g").attr("id","backHairSVGB");
+var bodySVGB=personSVGB.append("g").attr("id","bodyB");
+var headSVGB=personSVGB.append("g").attr("id","headB");
+var hobbyB=roleB.append("g").attr("id","hobbyB");
+var bubbleB=roleB.append("g").attr("id","bubbleB");
+var haloB=roleB.append("g").attr("id","haloB");
+/*头部编辑*/
+var backHairB=backHairSVGB.append("g").attr("id","backHairB");
+var middleHairB=headSVGB.append("g").attr("id","middleHairB");
+var faceB=headSVGB.append("g").attr("id","faceB");
+var facialB=headSVGB.append("g").attr("id","facialB");
+var eyebrowB=facialB.append("g").attr("id","eyebrowB");
+var mouthB=facialB.append("g").attr("id","mouthB");
+var eyeB=facialB.append("g").attr("id","eyeB");
+var noseB=facialB.append("g").attr("id","noseB");
+var expressB=headSVGB.append("g").attr("id","expressB");
+var featureB=headSVGB.append("g").attr("id","featureB");
+var frontHairB=headSVGB.append("g").attr("id","frontHairB");
+var express2B=headSVGB.append("g").attr("id","express2B");
+var glassB=headSVGB.append("g").attr("id","glassB");
+var hatB=headSVGB.append("g").attr("id","hatB");
+
+/*身体编辑*/
+var bodyB=bodySVGB.append("g").attr("id","bodyB");
+var clothB=bodySVGB.append("g").attr("id","clothB");
+
+var personTag1={
+	"sexual":{"id":0},
+	"hair":{"id":20008,"color":"#F29600","x":0,"y":0},
+	"face":{"id":20000,"color":"#F4CDA7","x":0,"y":0},
+	"mouth":{"id":2,"x":0,"y":0},
+	"eye":{"id":20010,"x":0,"y":0},
+	"eyebrow":{"id":1,"x":0,"y":0},
+	"hat":{"id":0,"x":0,"y":0},
+	"background":{"id":8,"x":0,"y":0},
+	"hobby":{"id":20032,"x":0,"y":0},
+	"cloth":{"id":22,"x":0,"y":0},
+	"bdBubble":{"id":40048,"x":0,"y":0},
+	"feature":{"id":0,"x":0,"y":0},
+	"glass":{"id":0,"x":0,"y":0},
+	"express":{"id":5,"x":0,"y":0},
+	"nose":{"id":0,"x":0,"y":0}
+}
+var personTag2={
+	"sexual":{"id":0},
+	"hair":{"id":8,"color":"#F29600","x":0,"y":0},
+	"face":{"id":20001,"color":"#F4CDA7","x":0,"y":0},
+	"mouth":{"id":9,"x":0,"y":0},
+	"eye":{"id":20010,"x":0,"y":0},
+	"eyebrow":{"id":1,"x":0,"y":0},
+	"hat":{"id":20001,"x":0,"y":0},
+	"hobby":{"id":20008,"x":0,"y":0},
+	"cloth":{"id":20045,"x":0,"y":0},
+	"feature":{"id":0,"x":0,"y":0},
+	"glass":{"id":0,"x":0,"y":0},
+	"express":{"id":12,"x":0,"y":0},
+	"nose":{"id":0,"x":0,"y":0}
+}
+// initTwoPerson(personTag1,personTag2);
+function initTwoPerson(personTag1,personTag2){
+	var person1Tag,person2Tag;
+	if(typeof personTag1=="string"){
+		person1Tag = eval("(" + personTag1 + ")");
+		person2Tag = eval("(" + personTag2 + ")");
+	}else{
+		person1Tag=personTag1;
+		person2Tag=personTag2;
+	}
+	recordTag(person1Tag,person2Tag)
+	//人物初始化
+	personInitA();
+	personInitB();
+	personSelect();
+	//屏幕最大化
+	resizeSVG();
+	$(window).resize(function(){
+		d3.select("#contentSVG").attr("width",$(window).get(0).innerWidth)
+			.attr("height",$(window).get(0).innerHeight);
+	});
+	setTimeout(resizeSVG,30);
+}
+function personSelect(){
+	haloChangeA(1);
+	$("#roleA").on("tap",function(){
+		$(".haloPartB").remove();
+		haloChangeA(1);
+		try{
+			myjsobj.setPosition(0);
+		}catch(e){
+			sendCommand("next","left");
+		}
+	});
+	$("#roleB").on("tap",function(){
+		$(".haloPartA").remove();
+		haloChangeB(1);
+		try{
+			myjsobj.setPosition(1);
+		}catch(e){
+			sendCommand("next","right");
+		}
+	});
+	$("#background,#background2,#background3,#bdBubble").on("tap",function(){
+		$(".haloPartA,.haloPartB").remove();
+	});
+}
+//ios跳转方法
+function sendCommand(cmd,param){
+    var url="iosapp:"+cmd+":"+param;
+    document.location = url;
+}
+function sendCommand2(cmd,param){
+    var url="saveapp:"+cmd+":"+param;
+    document.location = url;
+}function partTranslate(part,x,y){
+	window[part].attr("transform","translate("+x+","+y+")");
+}
+//人物初始化
+function personInitA() {
+	bodyChange(1);
+	hairChange(hairTag.id);
+	mouthChange(mouthTag.id);
+	eyeChange(eyeTag.id);
+	eyebrowChange(eyebrowTag.id);
+	noseChange(noseTag.id);
+	expressChange(expressTag.id);
+	faceChange(faceTag.id);
+	hatChange(hatTag.id);
+	backgroundChange(backgroundTag.id);
+	hobbyChange(hobbyTag.id);
+	clothChange(clothTag.id);
+	bdBubbleChange(bdBubbleTag.id);
+	featureChange(featureTag.id);
+	glassChange(glassTag.id);
+	roleA.attr("transform","translate(0,290) scale(.55,.55)");
+}
+function personInitB() {
+	bodyChangeB(1);
+	hairChangeB(hairTagB.id);
+	mouthChangeB(mouthTagB.id);
+	eyeChangeB(eyeTagB.id);
+	eyebrowChangeB(eyebrowTagB.id);
+	noseChangeB(noseTagB.id);
+	expressChangeB(expressTagB.id);
+	faceChangeB(faceTagB.id);
+	hatChangeB(hatTagB.id);
+	hobbyChangeB(hobbyTagB.id);
+	clothChangeB(clothTagB.id);
+	featureChangeB(featureTagB.id);
+	glassChangeB(glassTagB.id);
+	roleB.attr("transform","translate(295,290) scale(.55,.55)");
+}
+function recordTag(person1Tag,person2Tag){
+	console.log()
+	sexTag.id=person1Tag.sexual.id;
+	hairTag.id=person1Tag.hair.id;
+	hairTag.color=person1Tag.hair.color;
+	faceTag.id=person1Tag.face.id;
+	faceTag.color=person1Tag.face.color;
+	mouthTag.id=person1Tag.mouth.id;
+	eyeTag.id=person1Tag.eye.id;
+	eyebrowTag.id=person1Tag.eyebrow.id;
+	hatTag.id=person1Tag.hat.id;
+	backgroundTag.id=person1Tag.background.id;
+	hobbyTag.id=person1Tag.hobby.id;
+	clothTag.id=person1Tag.cloth.id;
+	bdBubbleTag.id=person1Tag.bdBubble.id;
+	featureTag.id=person1Tag.feature.id;
+	glassTag.id=person1Tag.glass.id;
+	expressTag.id=person1Tag.express.id;
+	noseTag.id=person1Tag.nose.id;
+	sexTagB.id=person2Tag.sexual.id;
+	hairTagB.id=person2Tag.hair.id;
+	hairTagB.color=person2Tag.hair.color;
+	faceTagB.id=person2Tag.face.id;
+	faceTagB.color=person2Tag.face.color;
+	mouthTagB.id=person2Tag.mouth.id;
+	eyeTagB.id=person2Tag.eye.id;
+	eyebrowTagB.id=person2Tag.eyebrow.id;
+	hatTagB.id=person2Tag.hat.id;
+	hobbyTagB.id=person2Tag.hobby.id;
+	clothTagB.id=person2Tag.cloth.id;
+	featureTagB.id=person2Tag.feature.id;
+	glassTagB.id=person2Tag.glass.id;
+	expressTagB.id=person2Tag.express.id;
+	noseTagB.id=person2Tag.nose.id;
+}
+//屏幕自适应
+function resizeSVG() {
+	d3.select("#contentSVG").attr("width",$(window).get(0).innerWidth)
+		.attr("height",$(window).get(0).innerHeight);
+}
+function bubbleEdit(inputString){
+	var bubbleTextArray=inputString.split("&el&");
+	d3.selectAll(".bubbleEditText").style("white-space","pre").text("");
+	for(var i=0;i<bubbleTextArray.length;i++){
+		$("#bubbleEditText"+i).text(bubbleTextArray[i]);
+	}
+	if(bubbleTextArray.length==1){
+		d3.select("#bubbleEditText0").attr("y",150);
+	}
+	if(bubbleTextArray.length==2){
+		d3.select("#bubbleEditText0").attr("y",120);
+		d3.select("#bubbleEditText1").attr("y",180);
+	}
+	if(bubbleTextArray.length==3){
+		d3.select("#bubbleEditText0").attr("y",80);
+		d3.select("#bubbleEditText1").attr("y",140);
+		d3.select("#bubbleEditText2").attr("y",200);
+	}
+}
+function bubbl2eEditA(inputString){
+	var bubbleTextArray=inputString.split("&el&");
+	d3.selectAll(".bubbl2eTextA").style("white-space","pre").text("");
+	for(var i=0;i<bubbleTextArray.length;i++){
+		$("#bubbl2eTextA"+i).text(bubbleTextArray[i]);
+	}
+	if(bubbleTextArray.length==1){
+		d3.select("#bubbl2eTextA0").attr("y",160);
+	}
+	if(bubbleTextArray.length==2){
+		d3.select("#bubbl2eTextA0").attr("y",130);
+		d3.select("#bubbl2eTextA1").attr("y",190);
+	}
+	if(bubbleTextArray.length==3){
+		d3.select("#bubbl2eTextA0").attr("y",100);
+		d3.select("#bubbl2eTextA1").attr("y",160);
+		d3.select("#bubbl2eTextA2").attr("y",220);
+	}
+}
+function bubbl2eEditB(inputString){
+	var bubbleTextArray=inputString.split("&el&");
+	d3.selectAll(".bubbl2eTextB").style("white-space","pre").text("");
+	for(var i=0;i<bubbleTextArray.length;i++){
+		$("#bubbl2eTextB"+i).text(bubbleTextArray[i]);
+	}
+	if(bubbleTextArray.length==1){
+		d3.select("#bubbl2eTextB0").attr("y",160);
+	}
+	if(bubbleTextArray.length==2){
+		d3.select("#bubbl2eTextB0").attr("y",130);
+		d3.select("#bubbl2eTextB1").attr("y",190);
+	}
+	if(bubbleTextArray.length==3){
+		d3.select("#bubbl2eTextB0").attr("y",100);
+		d3.select("#bubbl2eTextB1").attr("y",160);
+		d3.select("#bubbl2eTextB2").attr("y",220);
+	}
+}
+function cleanBubbl2eTextA(bdBubbleId){
+	$(".bubbl2ePartA").remove();
+	if($(".bubbl2ePartB").length==0){
+		bdBubbleChange(bdBubbleId);
+	}
+};
+function cleanBubbl2eTextB(bdBubbleId){
+	$(".bubbl2ePartB").remove();
+	if($(".bubbl2ePartA").length==0){
+		bdBubbleChange(bdBubbleId);
+	}
+};
+function cleanHalo(){
+    //cleanHalo();
+    //alert(d3.selectAll(".haloPartA,.haloPartB").length);
+	d3.selectAll(".haloPartA,.haloPartB").attr("opacity",0);
+ //   setTimeout(2000,function(){});
+     //alert("BBB");
+     //sendCommand2("next","ok")
+}
+function showHalo(){
+	d3.selectAll(".haloPartA,.haloPartB").attr("opacity",1);
+}
+</script>	
+</body>
+</html>
