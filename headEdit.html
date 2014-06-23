@@ -289,7 +289,12 @@ var dcMap = [["发型", "hair", "0 0 640, 700"],
 			 ["特征", "feature", "70 120 500 500"],
 			 ["眼镜", "glass", "70 90 500 500"],
 			 ["衣服", "cloth", "170 340 300 300"],
-			 
+			 ["帽子", "hat", "0 0 640 640"],
+			 ["爱好", "hobby", "0 0 640 640"],
+			 ["背景", "background", "0 0 640 640"],
+			 ["表情", "express", "0 0 640 640"],
+			 ["气泡", "bubble", "0 0 640 640"],
+
 			 ];
 var templete = "<div class=\"category\">${title}</div>";
 var categoryDiv = $("#categoryDiv");
@@ -302,7 +307,7 @@ for (var i = 0; i < dcMap.length; i++) {
 	}(i);
 	categoryDiv.append(category);
 };
-selectCategory(dcMap[0], categoryDiv.first());
+selectCategory(dcMap[dcMap.length - 1], categoryDiv.first());
 function selectCategory(id, sender){
 	$(".category.select").removeClass("select");
 	sender.addClass("select");
@@ -331,7 +336,11 @@ function selectCategory(id, sender){
 						var node=cellSvg;
 						var pathContent=node.append(d.type?d.type:"path").attr("d",d.path);
 						d.style.forEach(function(css){
-							pathContent.attr(css.attr,css.val);
+							if (css.attr === "text") {
+								pathContent.html(css.val);
+							} else {
+								pathContent.attr(css.attr,css.val);
+							}
 						});
 					}
 				};
@@ -347,7 +356,7 @@ function selectCategory(id, sender){
 					$(".picker.select").removeClass("select");
 					$(this).addClass("select");
 				});
-			}(val.id);
+			}(key.substring(id[1].length));
 		}
 	} else {
 		for (var i=0; i<id[2].length; i++){
