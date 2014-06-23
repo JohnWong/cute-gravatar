@@ -338,7 +338,7 @@ function selectCategory(id, sender){
 						d.style.forEach(function(css){
 							if (css.attr === "text") {
 								pathContent.html(css.val);
-							} else {
+							} else if (css.val) {
 								pathContent.attr(css.attr,css.val);
 							}
 						});
@@ -356,7 +356,7 @@ function selectCategory(id, sender){
 					$(".picker.select").removeClass("select");
 					$(this).addClass("select");
 				});
-			}(key.substring(id[1].length));
+			}(key.substring(id[1] == "background"? 2: id[1].length));
 		}
 	} else {
 		for (var i=0; i<id[2].length; i++){
